@@ -49,8 +49,8 @@ class TransactionValueCalculatorService {
 
   private def convertToDailyStatistics(typedTransactions: List[Transaction]): DailyStatistics ={
     val totalTransactionAmountInOneDay = typedTransactions.foldLeft(0.0)(_ + _.transactionAmount)
-    val day = typedTransactions(0).transactionDay
-    val accountId = typedTransactions(0).accountId
+    val day = typedTransactions.head.transactionDay
+    val accountId = typedTransactions.head.accountId
     var aATransactionValue =0.0
     var cCTransactionValue =0.0
     var fFTransactionValue =0.0
