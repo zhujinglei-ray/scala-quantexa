@@ -1,6 +1,6 @@
 package service
 
-import model.{AverageValueEachDay, DailyStatistics, Transaction}
+import model.{DailyStatistics, Transaction}
 
 class TransactionValueCalculatorService {
 
@@ -11,26 +11,28 @@ class TransactionValueCalculatorService {
     }
   }
 
-  def getAverageTransactionPerAccountForEachTye(transactions: List[Transaction]):  Map[String, Map[String,Double]] = {
+  def getAverageTransactionPerAccountForEachType(transactions: List[Transaction]): Map[String, Map[String, Double]] = {
     transactions.groupBy(x => x.accountId).map {
       recordByAccount =>
         (recordByAccount._1, recordByAccount._2.groupBy(y => y.category).map {
-          valueByCategory => (valueByCategory._1,getAverageValueForOneTypeTransaction(valueByCategory._2))
+          valueByCategory => (valueByCategory._1, getAverageValueForOneTypeTransaction(valueByCategory._2))
         })
     }
   }
 
   def getStatisticsForPreviousFiveDays(transactions: List[Transaction]): Unit = {
-    transactions.groupBy(x=>x.transactionDay).map{
-      recordByDay=>
-        (recordByDay._1,convertToDailyStatistics(recordByDay._2))
+    transactions.groupBy(x => x.transactionDay).map {
+      recordByDay =>
+        (recordByDay._1, convertToDailyStatistics(recordByDay._2))
     }
   }
 
 
-  def getDailyStatistics(transactions: List[Transaction]): Unit ={
+  def getDailyStatistics(transactions: List[Transaction]): Unit = {
 
   }
+
+
 
 
   private def getAverageValueForOneTypeTransaction(typedTransactions: List[Transaction]): Double = {
@@ -47,21 +49,21 @@ class TransactionValueCalculatorService {
     averageValue(transactionNum)
   }
 
-  private def convertToDailyStatistics(typedTransactions: List[Transaction]): DailyStatistics ={
+  private def convertToDailyStatistics(typedTransactions: List[Transaction]): DailyStatistics = {
     val totalTransactionAmountInOneDay = typedTransactions.foldLeft(0.0)(_ + _.transactionAmount)
     val day = typedTransactions.head.transactionDay
     val accountId = typedTransactions.head.accountId
-    var aATransactionValue =0.0
-    var cCTransactionValue =0.0
-    var fFTransactionValue =0.0
+    var aATransactionValue = 0.0
+    var cCTransactionValue = 0.0
+    var fFTransactionValue = 0.0
 
-    typedTransactions.foreach{
+    typedTransactions.foreach {
       x => {
-        if(x.category=="AA") aATransactionValue=x.transactionAmount
-        if(x.category=="CC") cCTransactionValue=x.transactionAmount
-        if(x.category=="FF") fFTransactionValue=x.transactionAmount
+        if (x.category == "AA") aATransactionValue = x.transactionAmount
+        if (x.category == "CC") cCTransactionValue = x.transactionAmount
+        if (x.category == "FF") fFTransactionValue = x.transactionAmount
       }
     }
-    DailyStatistics(day,accountId,totalTransactionAmountInOneDay,aATransactionValue,cCTransactionValue,fFTransactionValue)
+    DailyStatistics(day, accountId, totalTransactionAmountInOneDay, aATransactionValue, cCTransactionValue, fFTransactionValue)
   }
 }
