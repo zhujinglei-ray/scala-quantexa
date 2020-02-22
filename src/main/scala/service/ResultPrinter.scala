@@ -43,10 +43,6 @@ class ResultPrinter {
     AverageValueByCategoryPerAccount(id, aAAvgValue, bBAvgValue, cCAvgValue, dDAvgValue, eEAvgValue, fFAvgValue, gGAvgValue)
   }
 
-  private def getAccountIdInOrder(resultMap: Map[String, Map[String, Double]]): List[String] = {
-    resultMap.keySet.toList.sortBy(f => f.substring(1, f.length - 1).toInt)
-  }
-
   def getAllCategoryType(transactions: List[Transaction]): List[String] = {
     val category = transactions.groupBy(transaction => transaction.category).keys
     category.toList.sorted
