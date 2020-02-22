@@ -98,6 +98,4 @@ class TransactionValueCalculatorService {
     }
     DailyStatistics(day, accountId, transactionAmountInOneDay, aATransactionValue, cCTransactionValue, fFTransactionValue)
   }
-
-
 }

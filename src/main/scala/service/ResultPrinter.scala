@@ -1,7 +1,7 @@
 package service
 
 import scala.util.Try
-import model.{AverageValueByCategoryPerAccount, Transaction, TransactionCategory}
+import model.{AverageValueByCategoryPerAccount, PreviousFiveDayStatistics, Transaction, TransactionCategory}
 
 class ResultPrinter {
   def printQ1Result(resultMap: Map[Int, Double]): Unit = {
@@ -31,6 +31,17 @@ class ResultPrinter {
       }
     )
   }
+
+  def printQ3Result(resultMap:List[PreviousFiveDayStatistics]): Unit ={
+    println()
+    println("Calculating statistics for each account number for the previous five days of transactions")
+    println("-------------------------------------------------------------------------------")
+    println("Day,AccountId,Maximum,Average,AA Total Value,CC Total Value,FF Total Value")
+    for(statistics<-resultMap){
+      printf("%s,%s,%s,%s,%s,%s,%s \n",statistics.transactionDay,statistics.accountId,statistics.maxInPreviousFiveDays,statistics.averageInPreviousFiveDays,statistics.totalAATransactionValue,statistics.totalCCTransactionValue,statistics.totalFFTransactionValue)
+    }
+  }
+
 
   private def constructAverageValueByCategoryPerAccount(id: String, categoryAverageValueMap: Map[String, Double]): AverageValueByCategoryPerAccount = {
     val aAAvgValue = categoryAverageValueMap.getOrElse(TransactionCategory.AA.toString, 0.0)

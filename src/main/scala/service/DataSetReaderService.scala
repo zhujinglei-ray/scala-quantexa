@@ -8,7 +8,7 @@ class DataSetReaderService(val filePath: String) {
 
   def getListOfTransactions(): List[Transaction] = {
 
-    val transactions: List[Transaction] = getTransactionsLines().map {
+    val transactions: List[Transaction] = getTransactionsLines.map {
       transactionsLines =>
         val split = transactionsLines.split(',')
         Transaction(split(0), split(1), split(2).toInt, split(3), split(4).toDouble)
@@ -19,11 +19,11 @@ class DataSetReaderService(val filePath: String) {
     transactions
   }
 
-  private def getTransactionsLines(): Iterator[String] = {
+  private def getTransactionsLines: Iterator[String] = {
     Source.fromFile(filePath).getLines().drop(1)
   }
 
-  private def closeResources() = {
+  private def closeResources(): Unit = {
     Source.fromFile(filePath).close()
     println("resource have been close")
   }
