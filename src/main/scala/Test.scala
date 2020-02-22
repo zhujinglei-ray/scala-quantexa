@@ -1,17 +1,23 @@
 import model.Transaction
-import service.{DataSetReaderService, TransactionValueCalculatorService}
+import service.{DataSetReaderService, ResultPrinter, TransactionValueCalculatorService}
 
 object Test extends App {
   val inputPutFilePath ="src/transactions.txt"
   val dataReader = new DataSetReaderService(inputPutFilePath)
   val transactionValueCalculator = new TransactionValueCalculatorService
-  val inputTransactionsList = dataReader.getListOfTransactions()
-//  val result1 = transactionValueCalculator.getTotalTransactionValueForEachDay(inputTransactionsList)
-//  println(result1)
-//  val result2 = transactionValueCalculator.getAverageTransactionPerAccountForEachTye(inputTransactionsList)
-//  println(result2)
+  val resultPrinter = new ResultPrinter
 
-  val result = transactionValueCalculator.getTotalTransactionValueForEachDayList(inputTransactionsList)
-  val result1 = result.toList.sortBy(_.day)
-  println(result1)
+  val inputTransactionsList = dataReader.getListOfTransactions()
+  val resultMapOfQ1 = transactionValueCalculator.getTotalTransactionValueForEachDay(inputTransactionsList)
+  val resultMapOfQ2 = transactionValueCalculator.getAverageTransactionPerAccountForEachType(inputTransactionsList)
+  val resultMapOfQ3 = transactionValueCalculator.getStatisticsForPreviousFiveDays(inputTransactionsList)
+
+  //Question 1: Calculate the total transaction value for all transactions for each day
+  resultPrinter.printQ1Result(resultMapOfQ1)
+
+  //Question 2: Calculate the average value of transactions per account for each type of transaction
+  resultPrinter.printQ2Result(resultMapOfQ2)
+
+  //Question 3: Calculate statistics for each account number for the previous five days of transactions
+  resultPrinter.printQ3Result(resultMapOfQ3)
 }
