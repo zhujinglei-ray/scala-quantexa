@@ -1,6 +1,6 @@
 package service
 
-import model.{DailyStatistics, PreviousFiveDayStatistics, Transaction}
+import model.{DailyStatistics, MutablePreviousFiveDayStatistics, PreviousFiveDayStatistics, Transaction}
 
 import scala.collection.mutable.ListBuffer
 
@@ -31,12 +31,32 @@ class TransactionValueCalculatorService {
     for (day <- 6 to 29; idSet <- accIdSet) {
       resultList.append(getPreviousFiveDayResultByDayAndAcc(day, idSet, allDailyStatistics))
     }
-
     resultList.toList
   }
 
-  def getPreviousFiveDayResultByDayAndAcc(day: Int, acc: String,
-                                          dailyStatisticsMap: Map[(Int, String), DailyStatistics]): PreviousFiveDayStatistics = {
+  def getStatisticsForPreviousFiveDaysViaMapSolution(transactions: List[Transaction]): List[MutablePreviousFiveDayStatistics] = {
+
+    var inMemoryMap = scala.collection.mutable.Map[(Int, String), MutablePreviousFiveDayStatistics]()
+
+    transactions.foreach(transaction => {
+      val startDay = transaction.transactionDay
+      val accId = transaction.accountId
+      val targetUpdateStatisticList = getTargetUpdateStatisticList(startDay, accId)
+      targetUpdateStatisticList.foreach(
+        compoundKey => {
+          inMemoryMap.get(compoundKey) match {
+            case Some(e) => inMemoryMap.update(compoundKey, updateMutableStatistics(transaction, inMemoryMap(compoundKey)))
+            case None => inMemoryMap.put(compoundKey, addMutableStatistics(transaction))
+          }
+        }
+      )
+    })
+    inMemoryMap.values.toList
+  }
+
+
+  private def getPreviousFiveDayResultByDayAndAcc(day: Int, acc: String,
+                                                  dailyStatisticsMap: Map[(Int, String), DailyStatistics]): PreviousFiveDayStatistics = {
     var maxInPreviousFiveDays = 0.0
     var sumInPreviousFiveDays = 0.0
     var totalAATransactionValue = 0.0
@@ -55,7 +75,7 @@ class TransactionValueCalculatorService {
     PreviousFiveDayStatistics(day, acc, maxInPreviousFiveDays, sumInPreviousFiveDays / 5, totalAATransactionValue, totalCCTransactionValue, totalFFTransactionValue)
   }
 
-  def getDailyStatistics(transactions: List[Transaction]): Map[(Int, String), DailyStatistics] = {
+  private def getDailyStatistics(transactions: List[Transaction]): Map[(Int, String), DailyStatistics] = {
     val resultMap = scala.collection.mutable.Map[(Int, String), DailyStatistics]()
     transactions.groupBy(x => x.transactionDay).map {
       recordByDay =>
@@ -74,7 +94,7 @@ class TransactionValueCalculatorService {
     val sumOfTransaction = typedTransactions.foldLeft(0.0)(_ + _.transactionAmount)
 
     val averageValue: PartialFunction[Int, Double] = {
-      case numsOfEntry: Int if (numsOfEntry != 0) => sumOfTransaction / transactionNum
+      case numsOfEntry: Int if numsOfEntry != 0 => sumOfTransaction / transactionNum
       case _ => 0.0
     }
 
@@ -97,5 +117,48 @@ class TransactionValueCalculatorService {
       }
     }
     DailyStatistics(day, accountId, transactionAmountInOneDay, aATransactionValue, cCTransactionValue, fFTransactionValue)
+  }
+
+  private def updateMutableStatistics(transaction: Transaction, targetTransaction: MutablePreviousFiveDayStatistics): MutablePreviousFiveDayStatistics = {
+
+    var average = targetTransaction._averageInPreviousFiveDays + transaction.transactionAmount / 5
+    var statistics = new MutablePreviousFiveDayStatistics(transaction.transactionDay, transaction.accountId)
+    var currentMax = targetTransaction._maxInPreviousFiveDays
+    transaction.category match {
+      case "AA" => statistics.setTotalAATransactionValue(transaction.transactionAmount + targetTransaction._totalAATransactionValue)
+      case "CC" => statistics.setTotalCCTransactionValue(transaction.transactionAmount + targetTransaction._totalCCTransactionValue)
+      case "FF" => statistics.setTotalFFTransactionValue(transaction.transactionAmount + targetTransaction._totalFFTransactionValue)
+      case "BB" => statistics.setTotalBBTransactionValue(transaction.transactionAmount + targetTransaction._totalBBTransactionValue)
+      case "DD" => statistics.setTotalDDTransactionValue(transaction.transactionAmount + targetTransaction._totalDDTransactionValue)
+      case "EE" => statistics.setTotalEETransactionValue(transaction.transactionAmount + targetTransaction._totalEETransactionValue)
+      case "GG" => statistics.setTotalGGTransactionValue(transaction.transactionAmount + targetTransaction._totalGGTransactionValue)
+    }
+    statistics.setMaxInPreviousFiveDays(Math.max(targetTransaction._maxInPreviousFiveDays, currentMax))
+    statistics
+  }
+
+  private def addMutableStatistics(transaction: Transaction): MutablePreviousFiveDayStatistics = {
+    var statistics = new MutablePreviousFiveDayStatistics(transaction.transactionDay, transaction.accountId)
+    statistics.setAverageInPreviousFiveDays(transaction.transactionAmount / 5)
+    statistics.setMaxInPreviousFiveDays(transaction.transactionAmount)
+
+    transaction.category match {
+      case "AA" => statistics.setTotalAATransactionValue(transaction.transactionAmount)
+      case "CC" => statistics.setTotalCCTransactionValue(transaction.transactionAmount)
+      case "FF" => statistics.setTotalFFTransactionValue(transaction.transactionAmount)
+      case "BB" => statistics.setTotalBBTransactionValue(transaction.transactionAmount)
+      case "DD" => statistics.setTotalDDTransactionValue(transaction.transactionAmount)
+      case "EE" => statistics.setTotalEETransactionValue(transaction.transactionAmount)
+      case "GG" => statistics.setTotalGGTransactionValue(transaction.transactionAmount)
+    }
+    statistics
+  }
+
+  private def getTargetUpdateStatisticList(day: Int, accId: String): List[(Int, String)] = {
+    val targetList = new ListBuffer[(Int, String)]
+    for (i <- day until (day + 5)) {
+      targetList.append((i, accId))
+    }
+    targetList.toList
   }
 }

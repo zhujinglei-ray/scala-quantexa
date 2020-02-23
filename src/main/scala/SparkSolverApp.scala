@@ -4,7 +4,7 @@ import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
 import service.DataSetReaderService
 
-object SparkTest extends App {
+object SparkSolverApp extends App {
   val inputPutFilePath = "src/transactions.txt"
   val dataReader = new DataSetReaderService(inputPutFilePath)
   val inputTransactionsList = dataReader.getListOfTransactions()

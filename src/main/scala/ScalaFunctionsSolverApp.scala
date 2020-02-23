@@ -1,8 +1,7 @@
-import model.Transaction
 import service.{DataSetReaderService, ResultPrinter, TransactionValueCalculatorService}
 
-object Test extends App {
-  val inputPutFilePath ="src/transactions.txt"
+object ScalaFunctionsSolverApp extends App {
+  val inputPutFilePath = "src/transactions.txt"
   val dataReader = new DataSetReaderService(inputPutFilePath)
   val transactionValueCalculator = new TransactionValueCalculatorService
   val resultPrinter = new ResultPrinter
@@ -10,7 +9,7 @@ object Test extends App {
   val inputTransactionsList = dataReader.getListOfTransactions()
   //val resultMapOfQ1 = transactionValueCalculator.getTotalTransactionValueForEachDay(inputTransactionsList)
   //val resultMapOfQ2 = transactionValueCalculator.getAverageTransactionPerAccountForEachType(inputTransactionsList)
-  val resultMapOfQ3 = transactionValueCalculator.getStatisticsForPreviousFiveDays(inputTransactionsList)
+  val resultMapOfQ3 = transactionValueCalculator.getStatisticsForPreviousFiveDaysViaMapSolution(inputTransactionsList)
 
   //Question 1: Calculate the total transaction value for all transactions for each day
   //resultPrinter.printQ1Result(resultMapOfQ1)
@@ -19,5 +18,8 @@ object Test extends App {
   //resultPrinter.printQ2Result(resultMapOfQ2)
 
   //Question 3: Calculate statistics for each account number for the previous five days of transactions
-  resultPrinter.printQ3Result(resultMapOfQ3)
+
+
+  //Question 3: better solution via maintaining in memory map as db
+  resultPrinter.printQ3MapSolutionResult(resultMapOfQ3)
 }

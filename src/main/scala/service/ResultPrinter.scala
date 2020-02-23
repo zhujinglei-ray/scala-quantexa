@@ -1,7 +1,7 @@
 package service
 
 import scala.util.Try
-import model.{AverageValueByCategoryPerAccount, PreviousFiveDayStatistics, Transaction, TransactionCategory}
+import model._
 
 class ResultPrinter {
   def printQ1Result(resultMap: Map[Int, Double]): Unit = {
@@ -39,6 +39,16 @@ class ResultPrinter {
     println("Day,AccountId,Maximum,Average,AA Total Value,CC Total Value,FF Total Value")
     for(statistics<-resultMap){
       printf("%s,%s,%s,%s,%s,%s,%s \n",statistics.transactionDay,statistics.accountId,statistics.maxInPreviousFiveDays,statistics.averageInPreviousFiveDays,statistics.totalAATransactionValue,statistics.totalCCTransactionValue,statistics.totalFFTransactionValue)
+    }
+  }
+
+  def printQ3MapSolutionResult(resultMap:List[MutablePreviousFiveDayStatistics]): Unit ={
+    println()
+    println("Calculating statistics for each account number for the previous five days of transactions")
+    println("-------------------------------------------------------------------------------")
+    println("Day,AccountId,Maximum,Average,AA Total Value,CC Total Value,FF Total Value")
+    for(statistics<-resultMap){
+      printf("%s,%s,%s,%s,%s,%s,%s \n",statistics._transactionDay,statistics._accountId,statistics._maxInPreviousFiveDays,statistics._averageInPreviousFiveDays,statistics._totalAATransactionValue,statistics._totalCCTransactionValue,statistics._totalFFTransactionValue)
     }
   }
 
