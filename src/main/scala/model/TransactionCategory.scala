@@ -6,6 +6,6 @@ object TransactionCategory extends Enumeration {
   val CC: TransactionCategory.Value = Value("CC")
   val DD: TransactionCategory.Value = Value("DD")
   val EE: TransactionCategory.Value = Value("EE")
-  val FF: TransactionCategory.Value = Value("ff")
+  val FF: TransactionCategory.Value = Value("FF")
   val GG: TransactionCategory.Value = Value("GG")
 }

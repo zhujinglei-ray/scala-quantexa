@@ -37,16 +37,12 @@ class MutablePreviousFiveDayStatistics(transactionDay: Int,
 
   def setTotalGGTransactionValue(value: Double) = this._totalGGTransactionValue = value
 
-  def updateDayValueMap(day: Int, value: Double): Map[Int, Double] = {
-    val startDay = {
-      if (day - 5 > 0) day - 5
-      else 1
-    }
-    for (i <- startDay until day) {
-      this._dailyTotalMapInPrevious5Days.get(i) match {
-        case Some(e) => this._dailyTotalMapInPrevious5Days.update(i, this._dailyTotalMapInPrevious5Days(i) + value)
-        case None => this._dailyTotalMapInPrevious5Days.put(i, value)
+  def updateDayValueMap(value: Double, transactionDay: Int): Map[Int, Double] = {
+    this._dailyTotalMapInPrevious5Days.get(transactionDay) match {
+      case Some(e) => {
+        this._dailyTotalMapInPrevious5Days.update(transactionDay, value + this._dailyTotalMapInPrevious5Days(transactionDay))
       }
+      case None => this._dailyTotalMapInPrevious5Days.put(transactionDay, value)
     }
     this._dailyTotalMapInPrevious5Days.toMap
   }

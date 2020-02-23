@@ -53,9 +53,9 @@ class TransactionValueCalculatorService {
     })
 
     inMemoryMap.values.toList
-    //      .filter(y => {
-    //      y._transactionDay < 30 && y._transactionDay > 5
-    //    }).sortBy(x => x._transactionDay)
+          .filter(y => {
+          y._transactionDay < 30 && y._transactionDay > 5
+        }).sortBy(x => x._transactionDay)
   }
 
 
@@ -125,7 +125,7 @@ class TransactionValueCalculatorService {
 
   private def updateMutableStatistics(transaction: Transaction, targetTransaction: MutablePreviousFiveDayStatistics): MutablePreviousFiveDayStatistics = {
     var average = targetTransaction._averageInPreviousFiveDays + (transaction.transactionAmount / 5)
-    val currentMax = targetTransaction.updateDayValueMap(targetTransaction._transactionDay,transaction.transactionAmount).values.toList.max
+    val currentMax = targetTransaction.updateDayValueMap(transaction.transactionAmount,transaction.transactionDay).values.toList.max
     transaction.category match {
       case "AA" => targetTransaction.setTotalAATransactionValue(transaction.transactionAmount + targetTransaction._totalAATransactionValue)
       case "CC" => targetTransaction.setTotalCCTransactionValue(transaction.transactionAmount + targetTransaction._totalCCTransactionValue)
@@ -142,9 +142,11 @@ class TransactionValueCalculatorService {
 
   private def addMutableStatistics(day: Int, transaction: Transaction): MutablePreviousFiveDayStatistics = {
     var statistics = new MutablePreviousFiveDayStatistics(day, transaction.accountId)
-    statistics.setAverageInPreviousFiveDays(transaction.transactionAmount / 5)
-    statistics.setMaxInPreviousFiveDays(transaction.transactionAmount)
 
+    statistics.setAverageInPreviousFiveDays(transaction.transactionAmount / 5)
+
+    val currentMax = statistics.updateDayValueMap(transaction.transactionAmount,transaction.transactionDay).values.toList.max
+    statistics.setMaxInPreviousFiveDays(currentMax)
     transaction.category match {
       case "AA" => statistics.setTotalAATransactionValue(transaction.transactionAmount)
       case "CC" => statistics.setTotalCCTransactionValue(transaction.transactionAmount)
@@ -163,12 +165,5 @@ class TransactionValueCalculatorService {
       targetList.append((i, accId))
     }
     targetList.toList
-  }
-
-  private def getMaxToday(target: MutablePreviousFiveDayStatistics): Double = {
-    List(target._totalAATransactionValue, target._totalBBTransactionValue,
-      target._totalCCTransactionValue, target._totalDDTransactionValue,
-      target._totalEETransactionValue, target._totalFFTransactionValue,
-      target._totalGGTransactionValue).max
   }
 }
