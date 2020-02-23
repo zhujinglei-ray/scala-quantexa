@@ -1,17 +1,18 @@
 package service
 
-import scala.util.Try
 import model._
+
+import scala.util.Try
 
 class ResultPrinter {
   def printQ1Result(resultMap: Map[Int, Double]): Unit = {
     println()
     println("Calculating the total transaction value for all transactions for each day")
     println("------------------------------------------------------------------------")
-    println("Day        Value")
+    println("Day,Value")
     for (day <- 1 to 31) {
       val dailySum = resultMap.getOrElse(day, 0)
-      println(day + "   " + dailySum)
+      println(day + "," + dailySum)
     }
   }
 
@@ -32,23 +33,23 @@ class ResultPrinter {
     )
   }
 
-  def printQ3Result(resultMap:List[PreviousFiveDayStatistics]): Unit ={
+  def printQ3Result(resultMap: List[PreviousFiveDayStatistics]): Unit = {
     println()
     println("Calculating statistics for each account number for the previous five days of transactions")
     println("-------------------------------------------------------------------------------")
     println("Day,AccountId,Maximum,Average,AA Total Value,CC Total Value,FF Total Value")
-    for(statistics<-resultMap){
-      printf("%s,%s,%s,%s,%s,%s,%s \n",statistics.transactionDay,statistics.accountId,statistics.maxInPreviousFiveDays,statistics.averageInPreviousFiveDays,statistics.totalAATransactionValue,statistics.totalCCTransactionValue,statistics.totalFFTransactionValue)
+    for (statistics <- resultMap) {
+      printf("%s,%s,%s,%s,%s,%s,%s \n", statistics.transactionDay, statistics.accountId, statistics.maxInPreviousFiveDays, statistics.averageInPreviousFiveDays, statistics.totalAATransactionValue, statistics.totalCCTransactionValue, statistics.totalFFTransactionValue)
     }
   }
 
-  def printQ3MapSolutionResult(resultMap:List[MutablePreviousFiveDayStatistics]): Unit ={
+  def printQ3MapSolutionResult(resultMap: List[MutablePreviousFiveDayStatistics]): Unit = {
     println()
     println("Calculating statistics for each account number for the previous five days of transactions")
     println("-------------------------------------------------------------------------------")
     println("Day,AccountId,Maximum,Average,AA Total Value,CC Total Value,FF Total Value")
-    for(statistics<-resultMap){
-      printf("%s,%s,%s,%s,%s,%s,%s \n",statistics._transactionDay,statistics._accountId,statistics._maxInPreviousFiveDays,statistics._averageInPreviousFiveDays,statistics._totalAATransactionValue,statistics._totalCCTransactionValue,statistics._totalFFTransactionValue)
+    for (statistics <- resultMap) {
+      printf("%s,%s,%s,%s,%s,%s,%s \n", statistics._transactionDay, statistics._accountId, statistics._dailyTotal, statistics._averageInPreviousFiveDays, statistics._totalAATransactionValue, statistics._totalCCTransactionValue, statistics._totalFFTransactionValue)
     }
   }
 

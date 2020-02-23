@@ -27,7 +27,7 @@ object SparkSolverApp extends App {
     .orderBy("transactionDay", "accountId")
 
   resultOfQOne.repartition(1).write.option("header", "true")
-    .csv("/Users/zhuj/scala-quantexa/spark-result/resultFfQuestion1")
+    .csv("/Users/zhuj/scala-quantexa/spark-result/resultOfQuestion1BySpark")
 
 
   //Question 2: Calculate the average value of transactions per account for each type of transaction
@@ -38,7 +38,7 @@ object SparkSolverApp extends App {
     .orderBy("transactionDay", "accountId")
 
   resultOfQTwo.repartition(1).write.option("header", "true")
-    .csv("/Users/zhuj/scala-quantexa/spark-result/resultFfQuestion2")
+    .csv("/Users/zhuj/scala-quantexa/spark-result/resultOfQuestion2BySpark")
 
 
   //Question 3: Calculate statistics for each account number for the previous five days of transactions
@@ -60,5 +60,5 @@ object SparkSolverApp extends App {
     .filter(!(col("transactionDay") isin (listToRemove: _*)))
     .orderBy("transactionDay", "accountId")
 
-  resultOfQThree.repartition(1).write.option("header", "true").csv("/Users/zhuj/scala-quantexa/spark-result/resultFfQuestion3")
+  resultOfQThree.repartition(1).write.option("header", "true").csv("/Users/zhuj/scala-quantexa/spark-result/resultOfQuestion3BySpark")
 }
