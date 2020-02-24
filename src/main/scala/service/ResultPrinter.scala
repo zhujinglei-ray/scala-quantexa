@@ -49,10 +49,9 @@ class ResultPrinter {
     println("-------------------------------------------------------------------------------")
     println("Day,AccountId,Maximum,Average,AA Total Value,CC Total Value,FF Total Value")
     for (statistics <- resultMap) {
-      printf("%s,%s,%s,%s,%s,%s,%s \n", statistics._transactionDay, statistics._accountId, statistics._dailyTotal, statistics._averageInPreviousFiveDays, statistics._totalAATransactionValue, statistics._totalCCTransactionValue, statistics._totalFFTransactionValue)
+      printf("%s,%s,%s,%s,%s,%s,%s \n", statistics._transactionDay, statistics._accountId, statistics._dailyMaxValue, statistics._averageInPreviousFiveDays, statistics._totalAATransactionValue, statistics._totalCCTransactionValue, statistics._totalFFTransactionValue)
     }
   }
-
 
   private def constructAverageValueByCategoryPerAccount(id: String, categoryAverageValueMap: Map[String, Double]): AverageValueByCategoryPerAccount = {
     val aAAvgValue = categoryAverageValueMap.getOrElse(TransactionCategory.AA.toString, 0.0)
@@ -65,11 +64,6 @@ class ResultPrinter {
     AverageValueByCategoryPerAccount(id, aAAvgValue, bBAvgValue, cCAvgValue, dDAvgValue, eEAvgValue, fFAvgValue, gGAvgValue)
   }
 
-  def getAllCategoryType(transactions: List[Transaction]): List[String] = {
-    val category = transactions.groupBy(transaction => transaction.category).keys
-    category.toList.sorted
-  }
-
-  def tryToInt(s: String) = Try(s.toInt).toOption
+  private def tryToInt(s: String) = Try(s.toInt).toOption
 
 }

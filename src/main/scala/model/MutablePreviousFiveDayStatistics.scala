@@ -7,8 +7,7 @@ class MutablePreviousFiveDayStatistics(transactionDay: Int,
   val _transactionDay: Int = this.transactionDay
   val _accountId: String = this.accountId
   var _dailyTotalMapInPrevious5Days: mutable.Map[Int, Double] = scala.collection.mutable.Map[Int, Double]()
-
-  var _dailyTotal = 0.0
+  var _dailyMaxValue = 0.0
   var _averageInPreviousFiveDays = 0.0
   var _totalAATransactionValue = 0.0
   var _totalCCTransactionValue = 0.0
@@ -19,7 +18,7 @@ class MutablePreviousFiveDayStatistics(transactionDay: Int,
   var _totalEETransactionValue = 0.0
   var _totalGGTransactionValue = 0.0
 
-  def setMaxInPreviousFiveDays(value: Double) = this._dailyTotal = value
+  def setMaxInPreviousFiveDays(value: Double) = this._dailyMaxValue = value
 
   def setAverageInPreviousFiveDays(value: Double) = this._averageInPreviousFiveDays = value
 

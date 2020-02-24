@@ -7,7 +7,7 @@ import scala.io.Source
 class DataSetReaderService(val filePath: String) {
 
   def getListOfTransactions(): List[Transaction] = {
-
+    println("Resource is being imported from " + filePath)
     val transactions: List[Transaction] = getTransactionsLines.map {
       transactionsLines =>
         val split = transactionsLines.split(',')
@@ -25,6 +25,6 @@ class DataSetReaderService(val filePath: String) {
 
   private def closeResources(): Unit = {
     Source.fromFile(filePath).close()
-    println("resource have been close")
+    println("Resource have been close")
   }
 }
