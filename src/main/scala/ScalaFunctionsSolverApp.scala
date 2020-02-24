@@ -13,14 +13,14 @@ object ScalaFunctionsSolverApp extends App {
   val resultMapOfQ3ViaMapSolution = transactionValueCalculator.getStatisticsForPreviousFiveDaysViaMapSolution(inputTransactionsList)
 
   //Question 1: Calculate the total transaction value for all transactions for each day
- // resultPrinter.printQ1Result(resultMapOfQ1)
+  resultPrinter.printQ1Result(resultMapOfQ1)
 
   //Question 2: Calculate the average value of transactions per account for each type of transaction
   resultPrinter.printQ2Result(resultMapOfQ2)
-//  println(resultMapOfQ2)
+  //  println(resultMapOfQ2)
   //Question 3: Calculate statistics for each account number for the previous five days of transactions
-  //resultPrinter.printQ3Result(resultMapOfQ3)
+  resultPrinter.printQ3Result(resultMapOfQ3)
 
   //Question 3: better solution via maintaining in a memory map as db
-  //resultPrinter.printQ3MapSolutionResult(resultMapOfQ3ViaMapSolution)
+  resultPrinter.printQ3MapSolutionResult(resultMapOfQ3ViaMapSolution)
 }

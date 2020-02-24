@@ -53,9 +53,9 @@ class TransactionValueCalculatorService {
     })
 
     inMemoryMap.values.toList
-          .filter(y => {
-          y._transactionDay < 30 && y._transactionDay > 5
-        }).sortBy(x => x._transactionDay)
+      .filter(y => {
+        y._transactionDay < 30 && y._transactionDay > 5
+      }).sortBy(x => x._transactionDay)
   }
 
 
@@ -125,7 +125,7 @@ class TransactionValueCalculatorService {
 
   private def updateMutableStatistics(transaction: Transaction, targetTransaction: MutablePreviousFiveDayStatistics): MutablePreviousFiveDayStatistics = {
     var average = targetTransaction._averageInPreviousFiveDays + (transaction.transactionAmount / 5)
-    val currentMax = targetTransaction.updateDayValueMap(transaction.transactionAmount,transaction.transactionDay).values.toList.max
+    val currentMax = targetTransaction.updateDayValueMap(transaction.transactionAmount, transaction.transactionDay).values.toList.max
     transaction.category match {
       case "AA" => targetTransaction.setTotalAATransactionValue(transaction.transactionAmount + targetTransaction._totalAATransactionValue)
       case "CC" => targetTransaction.setTotalCCTransactionValue(transaction.transactionAmount + targetTransaction._totalCCTransactionValue)
@@ -145,7 +145,7 @@ class TransactionValueCalculatorService {
 
     statistics.setAverageInPreviousFiveDays(transaction.transactionAmount / 5)
 
-    val currentMax = statistics.updateDayValueMap(transaction.transactionAmount,transaction.transactionDay).values.toList.max
+    val currentMax = statistics.updateDayValueMap(transaction.transactionAmount, transaction.transactionDay).values.toList.max
     statistics.setMaxInPreviousFiveDays(currentMax)
     transaction.category match {
       case "AA" => statistics.setTotalAATransactionValue(transaction.transactionAmount)

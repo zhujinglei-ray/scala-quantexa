@@ -22,7 +22,7 @@ object SparkSolverApp extends App {
   val fiveDayAverage = udf(customizedAverageFor5Day)
 
   //Question 1: Calculate the total transaction value for all transactions for each day
-  val resultOfQOne = df.groupBy("transactionDay", "accountId", "category")
+  val resultOfQOne = df.groupBy("transactionDay", "accountId")
     .avg("transactionAmount")
     .orderBy("transactionDay", "accountId")
 
